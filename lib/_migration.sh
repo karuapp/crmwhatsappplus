@@ -140,15 +140,32 @@ EOF
 #######################################
 migration_unzip_crmplus() {
   print_banner
-  printf "${WHITE} 💻 Fazendo unzip da migration...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Movendo e fazendo unzip do crmplus...${GRAY_LIGHT}"
   printf "\n\n"
+
+  sleep 2
+
+  sudo su - root <<EOF
+  # Mover el archivo ZIP a /home/deploy/
+  mv /crmwhatsappplus/crmplus.zip /home/deploy/
+
+  # Cambiar propietario a deploy para evitar problemas de permisos
+  chown deploy:deploy /home/deploy/crmplus.zip
+  chmod 664 /home/deploy/crmplus.zip
+EOF
 
   sleep 2
 
   sudo su - deploy <<EOF
   cd /home/deploy || exit
-  unzip -o crmplus.zip -d /home/deploy/
-  chmod -R 775 /home/deploy/crmplus
+
+  # Verificar si el archivo ZIP existe antes de descomprimir
+  if [ -f crmplus.zip ]; then
+    unzip -o crmplus.zip -d /home/deploy/
+    echo "✅ Unzip finalizado!"
+  else
+    echo "⚠️ ERROR: No se encontró el archivo crmplus.zip en /home/deploy/"
+  fi
 EOF
 
   sleep 2
