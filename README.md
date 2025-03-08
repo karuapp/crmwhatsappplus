@@ -19,10 +19,14 @@ BACKEND_URL:  apicrmplus.marcablancasaas.com
 https://dnschecker.org/
 
 ## COPIAR A PASTA PARA ROOT E RODAR OS COMANDOS ABAIXO ##
-
+```bash
 cd ./crmwhatsappplus  # Entrar a la carpeta correcta
+```
+```bash
 sudo chmod +x crmplus  # Dar permisos de ejecución al archivo 'crmplus'
+```
+```bash
 sudo ./crmplus  # Ejecutar el archivo con permisos de administrador
-
+```
 
 ===================================================
