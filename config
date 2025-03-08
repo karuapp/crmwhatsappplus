@@ -1,4 +1,4 @@
 deploy_password=47050523
-pg_pass=LuOlivercrmplus
-redis_pass=LuOlivercrmplus
+pg_pass=MarcaBlancaSAAScrmplus
+redis_pass=MarcaBlancaSAAScrmplus
 deploy_email=manuel.davila.imel@gmail.com
