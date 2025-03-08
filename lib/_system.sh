@@ -55,11 +55,14 @@ system_unzip_crmplus() {
   sleep 2
 
   sudo su - deploy <<EOF
-  unzip crmplus.zip
+  cd /home/deploy || exit
+  unzip -o crmplus.zip -d /home/deploy/
+  chmod -R 775 /home/deploy/crmplus
 EOF
 
   sleep 2
 }
+
 
 #######################################
 # updates system

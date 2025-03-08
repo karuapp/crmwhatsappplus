@@ -16,11 +16,11 @@ tenant_copy_zip() {
 
   sudo su - root <<EOF
   cp "${PROJECT_ROOT}"/tenant.zip /home/deploy/
+  chown deploy:deploy /home/deploy/tenant.zip  # Asegura permisos correctos
 EOF
 
   sleep 2
 }
-
 
 #######################################
 # unzip tenant
@@ -35,11 +35,14 @@ tenant_unzip() {
   sleep 2
 
   sudo su - deploy <<EOF
-  unzip tenant.zip
+  cd /home/deploy || exit
+  unzip -o tenant.zip -d /home/deploy/
+  chmod -R 775 /home/deploy/tenant
 EOF
 
   sleep 2
 }
+
 
 #######################################
 # sets environment variable for tenant.
