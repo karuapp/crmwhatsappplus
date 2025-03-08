@@ -79,7 +79,7 @@ migration_mv_crmplus() {
 
   sudo su - root <<EOF
   cp "${PROJECT_ROOT}"/crmplus.zip /home/deploy/
-  mv /home/deploy/izing.io /home/deploy/crmplus
+  mv /home/deploy/crmplus /home/deploy/crmplus
 EOF
 
   sleep 2
