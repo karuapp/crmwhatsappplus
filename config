@@ -1,0 +1,4 @@
+deploy_password=LuOlivercrmplus
+pg_pass=LuOlivercrmplus
+redis_pass=LuOlivercrmplus
+deploy_email=brunos.xd3@gmail.com
