@@ -20,8 +20,9 @@ https://dnschecker.org/
 
 ## COPIAR A PASTA PARA ROOT E RODAR OS COMANDOS ABAIXO ##
 
-sudo chmod +x ./crmwhatsappplus/crmplus
-cd ./crmwhatsappplus
-sudo ./crmplus
+cd ./crmwhatsappplus  # Entrar a la carpeta correcta
+sudo chmod +x crmplus  # Dar permisos de ejecución al archivo 'crmplus'
+sudo ./crmplus  # Ejecutar el archivo con permisos de administrador
+
 
 ===================================================
