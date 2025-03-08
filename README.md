@@ -20,8 +20,8 @@ https://dnschecker.org/
 
 ## COPIAR A PASTA PARA ROOT E RODAR OS COMANDOS ABAIXO ##
 
-sudo chmod +x ./crmplus_marcablancasaas_shell/crmplus
-cd ./crmplus_passaporte_shell
+sudo chmod +x ./crmwhatsappplus/crmplus
+cd ./crmwhatsappplus
 sudo ./crmplus
 
 ===================================================
