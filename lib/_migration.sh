@@ -77,9 +77,17 @@ migration_mv_crmplus() {
 
   sleep 2
 
+  # Copiar el archivo ZIP y extraerlo en la ubicación deseada
   sudo su - root <<EOF
-  cp "${PROJECT_ROOT}"/crmplus.zip /home/deploy/
-  mv /home/deploy/crmplus /home/deploy/crmplus
+  cp "${PROJECT_ROOT}"/crmplus.zip /home/deploy/  # Copiar el ZIP
+  cd /home/deploy  # Ir a la carpeta de destino
+  unzip crmplus.zip -d /home/deploy/  # Extraer el ZIP
+
+  # Cambiar los permisos de la carpeta extraída
+  chmod -R 775 /home/deploy/crmplus  # Dar permisos adecuados a la carpeta crmplus
+
+  # Eliminar el archivo ZIP después de la extracción (opcional)
+  rm -f /home/deploy/crmplus.zip
 EOF
 
   sleep 2
