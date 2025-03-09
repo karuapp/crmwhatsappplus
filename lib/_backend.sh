@@ -25,8 +25,8 @@ backend_db_create() {
   # Crear y ejecutar el contenedor de PostgreSQL
   docker run --name postgresql \
                 -e POSTGRES_USER=crmplus \
-                -e POSTGRES_PASSWORD=${pg_pass} \
-                -e TZ="America/Sao_Paulo" \
+                -e POSTGRES_PASSWORD=marcablancasaas \
+                -e TZ="America/Tegucigalpa" \
                 -p 5432:5432 \
                 --restart=always \
                 -v /data:/var/lib/postgresql/data \
@@ -43,7 +43,7 @@ backend_db_create() {
 
   # Crear contenedor Redis para crmplus
   docker run --name redis-crmplus \
-                -e TZ="America/Sao_Paulo" \
+                -e TZ="America/Tegucigalpa" \
                 -p 6379:6379 \
                 --restart=always \
                 -d redis:latest redis-server \
