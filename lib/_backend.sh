@@ -9,26 +9,39 @@
 #######################################
 backend_db_create() {
   print_banner
-  printf "${WHITE} 💻 Criando banco de dados...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Criando banco de dados e usuário...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
 
   sudo su - root <<EOF
+  # Asegurarse de que el usuario deploy esté en el grupo docker
   usermod -aG docker deploy
 
+  # Crear directorio y asignar permisos
   mkdir -p /data
   chown -R 999:999 /data
 
+  # Crear y ejecutar el contenedor de PostgreSQL
   docker run --name postgresql \
                 -e POSTGRES_USER=crmplus \
                 -e POSTGRES_PASSWORD=${pg_pass} \
-				-e TZ="America/Sao_Paulo" \
+                -e TZ="America/Sao_Paulo" \
                 -p 5432:5432 \
                 --restart=always \
                 -v /data:/var/lib/postgresql/data \
                 -d postgres
 
+  # Esperar un poco para asegurar que PostgreSQL está listo
+  sleep 5
+
+  # Crear la base de datos crmplus si no existe
+  docker exec -u postgres postgresql psql -c "CREATE DATABASE crmplus;"
+
+  # Asegurarse de que el usuario crmplus tiene privilegios sobre la base de datos
+  docker exec -u postgres postgresql psql -c "GRANT ALL PRIVILEGES ON DATABASE crmplus TO crmplus;"
+
+  # Crear contenedor Redis para crmplus
   docker run --name redis-crmplus \
                 -e TZ="America/Sao_Paulo" \
                 -p 6379:6379 \
@@ -37,6 +50,7 @@ backend_db_create() {
                 --appendonly yes \
                 --requirepass "${redis_pass}"
   
+  # Crear contenedor de Portainer para administración de Docker
   docker run -d --name portainer \
                 -p 9000:9000 -p 9443:9443 \
                 --restart=always \
@@ -46,6 +60,7 @@ EOF
 
   sleep 2
 }
+
 
 #######################################
 # install_chrome
@@ -122,7 +137,7 @@ DB_TIMEZONE=-03:00
 POSTGRES_HOST=localhost
 POSTGRES_USER=crmplus
 POSTGRES_PASSWORD=${pg_pass}
-POSTGRES_DB=postgres
+POSTGRES_DB=crmplus
 
 # Chaves para criptografia do token jwt
 JWT_SECRET=${jwt_secret}
