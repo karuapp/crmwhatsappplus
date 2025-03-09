@@ -9,57 +9,28 @@
 #######################################
 backend_db_create() {
   print_banner
-  printf "${WHITE} 💻 Criando banco de dados e usuário...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Creando base de datos y usuario...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
 
-  sudo su - root <<EOF
-  # Asegurarse de que el usuario deploy esté en el grupo docker
-  usermod -aG docker deploy
+  sudo su - postgres <<EOF
+  # Crear usuario si no existe
+  psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='crmplus'" | grep -q 1 || psql -c "CREATE USER crmplus WITH PASSWORD 'marcablancasaas';"
 
-  # Crear directorio y asignar permisos
-  mkdir -p /data
-  chown -R 999:999 /data
+  # Crear base de datos si no existe
+  psql -tAc "SELECT 1 FROM pg_database WHERE datname='crmplus'" | grep -q 1 || psql -c "CREATE DATABASE crmplus OWNER crmplus ENCODING 'UTF8' LC_COLLATE='C' LC_CTYPE='C' TEMPLATE=template0;"
 
-  # Crear y ejecutar el contenedor de PostgreSQL
-  docker run --name postgresql \
-                -e POSTGRES_USER=crmplus \
-                -e POSTGRES_PASSWORD=marcablancasaas \
-                -e TZ="America/Tegucigalpa" \
-                -p 5432:5432 \
-                --restart=always \
-                -v /data:/var/lib/postgresql/data \
-                -d postgres
+  # Conceder todos los privilegios al usuario sobre la base de datos
+  psql -c "GRANT ALL PRIVILEGES ON DATABASE crmplus TO crmplus;"
 
-  # Esperar un poco para asegurar que PostgreSQL está listo
-  sleep 5
-
-  # Crear la base de datos crmplus si no existe
-  docker exec -u postgres postgresql psql -c "CREATE DATABASE crmplus;"
-
-  # Asegurarse de que el usuario crmplus tiene privilegios sobre la base de datos
-  docker exec -u postgres postgresql psql -c "GRANT ALL PRIVILEGES ON DATABASE crmplus TO crmplus;"
-
-  # Crear contenedor Redis para crmplus
-  docker run --name redis-crmplus \
-                -e TZ="America/Tegucigalpa" \
-                -p 6379:6379 \
-                --restart=always \
-                -d redis:latest redis-server \
-                --appendonly yes \
-                --requirepass "${redis_pass}"
-  
-  # Crear contenedor de Portainer para administración de Docker
-  docker run -d --name portainer \
-                -p 9000:9000 -p 9443:9443 \
-                --restart=always \
-                -v /var/run/docker.sock:/var/run/docker.sock \
-                -v portainer_data:/data portainer/portainer-ce
+  # Configurar el huso horario en postgresql.conf (solo si es necesario)
+  echo "timezone = 'America/Tegucigalpa'" >> /var/lib/postgresql/data/postgresql.conf
 EOF
 
   sleep 2
 }
+
 
 
 #######################################
@@ -102,8 +73,8 @@ backend_set_env() {
 
   # Salvar as senhas em um arquivo para reutilização
   cat << EOF > "${PROJECT_ROOT}"/db_credentials
-pg_pass=${pg_pass}
-redis_pass=${redis_pass}
+pg_pass=marcablancasaas
+redis_pass=marcablancasaas
 EOF
 
   # ensure idempotency
@@ -136,7 +107,7 @@ DB_PORT=5432
 DB_TIMEZONE=-03:00
 POSTGRES_HOST=localhost
 POSTGRES_USER=crmplus
-POSTGRES_PASSWORD=${pg_pass}
+POSTGRES_PASSWORD=marcablancasaas
 POSTGRES_DB=crmplus
 
 # Chaves para criptografia do token jwt
