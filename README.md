@@ -23,10 +23,10 @@ https://dnschecker.org/
 cd ./crmwhatsappplus  # Entrar a la carpeta correcta
 ```
 ```bash
-sudo chmod +x crmplus  # Dar permisos de ejecución al archivo 'crmplus'
+sudo chmod +x instalador.sh  # Dar permisos de ejecución al archivo 'instalador.sh'
 ```
 ```bash
-sudo ./crmplus  # Ejecutar el archivo con permisos de administrador
+sudo ./instalador.sh  # Ejecutar el archivo con permisos de administrador
 ```
 
 ===================================================
